@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-multitool
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx-multitool
+  template:
+    metadata:
+      labels:
+        app: nginx-multitool
+    spec:
+      initContainers:
+      - name: wait-for-service
+        image: busybox:latest
+        command: ['sh', '-c', 'until nslookup netology-svc.default.svc.cluster.local; do echo waiting for service; sleep 2; done']
+
+      containers:
+      - name: nginx
+        image: nginx:latest
+        env:
+        - name: HTTP_PORT            
+          value: "80"
+        ports:
+        - containerPort: 80
+      - name: multitool
+        image: wbitt/network-multitool:latest
+        env:
+        - name: HTTP_PORT            
+          value: "1180"
+        ports:
+        - containerPort: 1180
