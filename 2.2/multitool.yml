@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: multitool
+  labels:
+    app: multitool
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: multitool
+  template:
+    metadata:
+      labels:
+        app: multitool
+    spec:
+      containers:
+        - name: multitool
+          image: wbitt/network-multitool:latest
+          command: ["sh", "-c", "echo 'Monitoring file...'; tail -f /shared/log.txt"]
+          volumeMounts:
+            - name: data
+              mountPath: /shared
+      volumes:
+      - name: data 
+        persistentVolumeClaim:
+          claimName: pvc-data

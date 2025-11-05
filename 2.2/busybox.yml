@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: busybox
+  labels:
+    app: busybox
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: busybox
+  template:
+    metadata:
+      labels:
+        app: busybox
+    spec:
+      containers:
+        - name: busybox
+          image: busybox:latest
+          command: ["sh", "-c", "while true; do echo \"$(date) - Hello from BusyBox\" >> /shared/log.txt; sleep 5; done"]
+          volumeMounts:
+            - name: data
+              mountPath: /shared
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: pvc-data
