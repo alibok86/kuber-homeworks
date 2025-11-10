@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-conf
+data:
+  index.html: |
+    <html>
+    <head><title>Netology</title></head>
+    <body style="font-family:sans-serif;text-align:center;margin-top:40px">
+      <h1>Hello to Netology</span>!</h1>
+    </body>
+    </html>
+  default.conf: |
+    server {
+      listen       80;
+      listen       443 ssl;
+      server_name  netology.local;
+      
+      ssl_certificate     /etc/nginx/ssl/tls.crt;
+      ssl_certificate_key /etc/nginx/ssl/tls.key;
+      
+      location / {
+        root   /usr/share/nginx/html;
+        index  index.html;
+      }
+    }
